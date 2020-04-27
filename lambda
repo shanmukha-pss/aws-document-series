@@ -1,0 +1,120 @@
+Author: Shanmukha SP
+Designation: Senior Application Developer@cloudwick
+E-mail: shanmukha.pss@gmail.com
+
+AWS LAMBDA
+1.	AWS Lambda is a compute service that lets you run code without managing servers. It scales the code automatically.
+2.	You can run lamda with response to events/HTTP requests/ API Calls.
+3.	Each user can create up to 10 test events per function. Those test events are not available to other users.
+4.	The handler in your Lambda function receives and then processes the  event.
+5.	Lambda_hanlder(Event, Context)
+6.	With AWS Lambda, you run functions to process events. You can send events to your function by invoking it with the Lambda API, or by configuring an AWS service or resource to invoke it.
+
+a.	Functions: A functions is resource that you can invoke to run your code in AWS Lambda. It has code, runtime.
+b.	Runtime: It sits between the lambda and your function code, relaying invocation events, context information and response between the two.
+c.	Event: A JSON formatted document that contains data for function to process. The lambda runtime converts the event to an object and passes it to your function code. When an AWS service invokes your functions, the service defines the shape of the event.
+7.	Concurrency: The number of requests that your function is serving at any given time.
+8.	Trigger: Resource or configuration that invoked a Lambda function.
+9.	The runtime captures logging output from your function and sends it to Amazon CloudWatch Logs.
+10.	Lambda scales your function by running additional instances of it as demand increases, and by stopping instances as demand decreases. 
+11.	Layers: Lambda layers are a distribution mechanism for libraries, custom runtimes, and other function dependencies.
+12.	Scaling: Lambda manages the infrastructure that runs your code, and scales automatically in response to incoming events.
+13.	Reserved concurrency: splits the pool of available concurrency into subsets. A function with reserved concurrency only uses concurrency from its dedicated pool/
+14.	Provisioned concurrency: Scale without latency. for a function that takes a long time to initialize, or require extremely low latency for all invocations.
+15.	Asynchronous Invocation: you don’t wait for the response.
+16.	For Synchronous: Lambda  handles retries if the function fails or is throttled.
+17.	Event Source Mapping: To process items from a stream or queue. An event source mapping is a resource in Lambda that reads items from an SQS, Kinesis, or Dynamo and sends them into your functions in batches.
+18.	Event source Mapping maintain a local queue of unprocessed items, and handle retries.
+19.	A destination in an AWS resource that receives invocation records for a function.
+20.	Limits
+a.	Concurrent executions: 1,000
+b.	Function and Layer storage: 75 GB
+c.	Elastic nw interface per VPC: 250
+d.	Above are soft limits and below the hard limit
+e.	Fn memory allocation: 128 MB to 3008MB
+f.	Time out : 15 mins(Default is 3 secs)
+g.	Environment variable: 4KB
+h.	Layers: 5 layers
+i.	Burst concurrency: 500-3000
+21.	Lambda Execution Role: Policy that grants it permission to access AWS services and resources. At minimum it need cloudwatch.
+22.	Resource based policies: It lets you grant usage permission to other accounts on a per-resource basis.
+23.	Identity based policies can apply to users directly.
+24.	Layers: it is a zip archive that contains libraries, a custom runtimes, or other dependencies.
+25.	Db Proxy: for functions that use an Amazon RDS Db instance or cluster.
+26.	Setting Env Variable: 
+Import os
+REGION = os.environ[‘AWS_REGION’]
+27.	Database Proxy: it manages a pool of database connections and relays queries from a function. This enables a function to reach high concurrency levels without exhausting connections.
+28.	Dead-Letter-Queue(DLQ): to save discarded events for further processing.(SNS or SQS)
+29.	DeadLetterError: If lambda cant send message to DLQ.
+30.	 Event Source Mapping: Reads from an event source and invokes a lambda function.
+31.	Service supported for ESM by Lambda:
+a.	Kineses
+b.	Dynamo
+c.	SQS
+32.	Error Handling in Lambda: two types
+a.	Invocation error: Issue with called, request or account
+b.	 error: Code errors, time out 
+33.	Lambda Runtime:
+a.	A runtime is program that runs a lambda function’s Handler method when invoked.
+b.	Execution Context: It is the execution context based on the configuration setting we provide. This is a temporary runtime environment that initialises any external dependencies and Db connections of HTTP endpoints.
+34.	Lambda Applications:
+a.	A lambda application is a combination of lambda functions, event sources, and other resources that work together to perform tasks.
+35.	Rolling deployments: to control the risk associated with introducing new versions of your Lambda functions. In this, the system automatically deploys the new version of the function and gradually sends an increasing amount of traffic to the new version.
+36.	CodeDeploy: Its is a service that automates application deployments to amazon computing platforms such as EC2 and Lambda.
+37.	Best practices:
+a.	Separate the lambda handler code from your core logic.
+b.	Take advantage of execution context reuse.
+c.	Use environment variable.
+d.	Package the deployment
+e.	Minimize your deployment package
+f.	Avoid using recursive code
+38.	Working with other services:
+a.	Services that Lambda reads events from(Other services invoke the function directly.)
+i.	Kinesis
+ii.	DynamoDb
+iii.	SQS
+b.	Services that invoke Lambda functions Synchronously:
+i.	ELB
+ii.	Cognito
+iii.	Lex
+iv.	Alexa
+v.	Gateway
+vi.	CloudFront
+vii.	Firehose
+viii.	Stepfunctions
+ix.	S3 batch
+c.	Services that invoke Lambda functions Asynchronously:
+i.	S3
+ii.	SNS
+iii.	SES
+iv.	CFT
+v.	CW logs
+vi.	CW events
+vii.	CodeCommit
+viii.	Config
+ix.	IOT
+x.	IoT Events
+xi.	CodePipeLine
+39.	Lambda with ALB:
+a.	To process requests from an ALB. Use LB rules to route HTTP requests to a function, based on the path or header.
+40.	API gateway: 
+a.	It provides tools for creating and documenting web APIs that route HTTP requests to Lambda functions.
+b.	API GW waits for a response from your function and relays the result to the caller.
+c.	The Lambda runtime serialize the response object into JSON and sends it to the API. The API parses the response and uses it to create an HTTP response, which it then sends to the client that made the original request.
+d.	API gateway treats all invocation and function errors as internal errors.
+e.	Supports 3 types of API:
+i.	HTTP API: Lightweight, low-latency RESTful API.
+ii.	REST API: Customizable, feature-rich RESTful.
+iii.	WebSocket API: maintains persistent connections with Clients for full-duplex communication.
+41.	Using AWS Lambda with AWS CloudTrail
+a.	It records actions taken by a user, role, or AWS service.
+b.	CT captures API calls as events.
+42.	Using AWS Lambda with AWS CloudWatch events.
+a.	CW helps to respond state changes in your AWS resources.
+b.	When a state changes they automatically sends events to event stream
+43.	Using AWS Lambda with Dynamo
+a.	Lambda polls shards in Dynamodb streams. 
+b.	Batch window
+
+	
